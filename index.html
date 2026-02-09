@@ -7,13 +7,20 @@
 </head>
 <body>
 
-<h1>🎨 Creative Hub</h1>
-<p>Animasyonlar, videolar ve hikâyeler</p>
+<h1> Creative Hub</h1>
+<p class="subtitle">Herkese açık animasyon, video ve hikâye platformu</p>
 
-<div class="upload">
+<div class="share">
+  <select id="type">
+    <option value="image"> Resim</option>
+    <option value="video"> Video</option>
+    <option value="story"> Hikâye</option>
+  </select>
+
   <input id="title" placeholder="Başlık">
-  <input id="video" placeholder="YouTube video linki (isteğe bağlı)">
-  <textarea id="story" placeholder="Hikâye yaz (isteğe bağlı)"></textarea>
+  <input type="file" id="media" accept="image/*,video/*">
+  <textarea id="text" placeholder="Hikâye / açıklama"></textarea>
+
   <button onclick="addPost()">Paylaş</button>
 </div>
 
@@ -22,3 +29,4 @@
 <script src="app.js"></script>
 </body>
 </html>
+
