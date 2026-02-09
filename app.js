@@ -1,31 +1,32 @@
 let posts = JSON.parse(localStorage.getItem("posts")) || [];
 
 function addPost() {
+  const type = document.getElementById("type").value;
   const title = document.getElementById("title").value;
-  const video = document.getElementById("video").value;
-  const story = document.getElementById("story").value;
+  const text = document.getElementById("text").value;
+  const file = document.getElementById("media").files[0];
 
   if (!title) return alert("Başlık gerekli");
 
-  posts.unshift({
+  const post = {
+    type,
     title,
-    video,
-    story,
+    text,
+    media: file ? URL.createObjectURL(file) : null,
     comments: []
-  });
+  };
 
+  posts.unshift(post);
   localStorage.setItem("posts", JSON.stringify(posts));
-  document.getElementById("title").value = "";
-  document.getElementById("video").value = "";
-  document.getElementById("story").value = "";
+  clearInputs();
   render();
 }
 
-function addComment(i, inputId) {
-  const text = document.getElementById(inputId).value;
-  if (!text) return;
+function addComment(i, id) {
+  const input = document.getElementById(id);
+  if (!input.value) return;
 
-  posts[i].comments.push(text);
+  posts[i].comments.push(input.value);
   localStorage.setItem("posts", JSON.stringify(posts));
   render();
 }
@@ -35,15 +36,21 @@ function render() {
   container.innerHTML = "";
 
   posts.forEach((p, i) => {
-    const videoEmbed = p.video
-      ? `<iframe src="${p.video.replace("watch?v=", "embed/")}" allowfullscreen></iframe>`
-      : "";
+    let mediaHTML = "";
+
+    if (p.type === "image" && p.media) {
+      mediaHTML = `<img src="${p.media}">`;
+    }
+
+    if (p.type === "video" && p.media) {
+      mediaHTML = `<video controls src="${p.media}"></video>`;
+    }
 
     container.innerHTML += `
       <div class="post">
         <h3>${p.title}</h3>
-        ${videoEmbed}
-        <p>${p.story || ""}</p>
+        ${mediaHTML}
+        <p>${p.text || ""}</p>
 
         <h4>Yorumlar</h4>
         ${p.comments.map(c => `<div class="comment">💬 ${c}</div>`).join("")}
@@ -55,4 +62,11 @@ function render() {
   });
 }
 
+function clearInputs() {
+  document.getElementById("title").value = "";
+  document.getElementById("text").value = "";
+  document.getElementById("media").value = "";
+}
+
 render();
+
